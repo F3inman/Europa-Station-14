@@ -47,7 +47,7 @@ public sealed partial class MorphComponent : Component
     public int EatWeaponHungerReq = 5;
 
     [DataField]
-    public int DetectableCount = 6;
+    public int DetectableCount = 3;
 
     [DataField]
     public int OpenVentFoodReq = 5;
@@ -107,6 +107,7 @@ public sealed partial class MorphComponent : Component
     //бла-бла-бла, это надо если хотите делать морф под гуманоидов не костылями
     // public (EntityUid, HumanoidAppearanceComponent) NullspacedHumanoid = default;
 
+    public float AmbushBlockRange = 2.15f;
 }
 
 public sealed partial class MorphMimicryRememberActionEvent : EntityTargetActionEvent;

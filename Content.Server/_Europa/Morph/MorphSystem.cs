@@ -34,6 +34,9 @@ using Content.Shared.Movement.Events;
 using Content.Shared.Movement.Components;
 using Content.Shared.Standing;
 using Content.Server.Body.Components;
+using Content.Server.Ghost.Roles.Components;
+using Content.Shared.Ghost;
+using Content.Shared.Mind.Components;
 using Robust.Server.GameObjects;
 using Robust.Shared.Map;
 
@@ -65,6 +68,8 @@ public sealed class MorphSystem : SharedMorphSystem
     [Dependency] private readonly WeldableSystem _weldable = default!;
     [Dependency] private readonly StandingStateSystem _standing = default!;
     [Dependency] private readonly TransformSystem _transform = default!;
+    [Dependency] private readonly EntityLookupSystem _lookup = default!;
+    [Dependency] private readonly MobStateSystem _mobState = default!;
 
     public ProtoId<DamageGroupPrototype> BruteDamageGroup = "Brute";
     public ProtoId<DamageGroupPrototype> BurnDamageGroup = "Burn";
@@ -127,7 +132,8 @@ public sealed class MorphSystem : SharedMorphSystem
         }
         else if (_random.Prob(ent.Comp.EatWeaponChanceOnHited) && _hunger.GetHunger(hunger) >= ent.Comp.EatWeaponHungerReq)
         {
-            _container.Insert(args.Used, ent.Comp.Container);
+            ent.Comp.ContainedCreatures.Add(args.Used);
+            _transform.SetCoordinates(args.Used, new EntityCoordinates(EntityUid.Invalid, Vector2.Zero));
             _audioSystem.PlayPvs(ent.Comp.SoundDevour, ent);
             _hunger.ModifyHunger(ent, -ent.Comp.EatWeaponHungerReq, hunger);
         }
@@ -148,7 +154,8 @@ public sealed class MorphSystem : SharedMorphSystem
             if (_hunger.GetHunger(hunger) < ent.Comp.EatWeaponHungerReq)
                 return;
 
-            _container.Insert(item.Value, ent.Comp.Container);
+            ent.Comp.ContainedCreatures.Add(item.Value);
+            _transform.SetCoordinates(item.Value, new EntityCoordinates(EntityUid.Invalid, Vector2.Zero));
             _audioSystem.PlayPvs(ent.Comp.SoundDevour, ent);
             _hunger.ModifyHunger(ent, -ent.Comp.EatWeaponHungerReq, hunger);
         }
@@ -206,6 +213,12 @@ public sealed class MorphSystem : SharedMorphSystem
         if (!TryComp<ChameleonProjectorComponent>(uid, out var chamel))
             return;
 
+        if (NonMorphInRange(uid, component))
+        {
+            _popup.PopupCursor(Loc.GetString("morph-ambush-blocked"), uid);
+            return;
+        }
+
         if (TryComp<MorphAmbushComponent>(uid, out _))
         {
             AmbushBreak(uid);
@@ -256,6 +269,23 @@ public sealed class MorphSystem : SharedMorphSystem
             input.CanMove = true;
             Dirty(uid, input);
         }
+    }
+
+    private bool NonMorphInRange(EntityUid uid, MorphComponent component)
+    {
+        var coordinates = _transform.GetMapCoordinates(uid);
+        foreach (var entity in _lookup.GetEntitiesInRange(coordinates, component.AmbushBlockRange))
+        {
+            if (HasComp<MindContainerComponent>(entity) && !HasComp<MorphComponent>(entity) && !HasComp<GhostComponent>(entity))
+            {
+                if ((TryComp<MobStateComponent>(entity, out var entityMobState) && HasComp<GhostTakeoverAvailableComponent>(entity) && _mobState.IsDead(entity, entityMobState)))
+                    continue;
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void OnAmbushInteract(EntityUid uid, MorphAmbushComponent component, UndisguisedEvent args)
