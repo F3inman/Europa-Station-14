@@ -505,9 +505,6 @@
     #- ChemistryStatic
     #- SurgeryStatic
     dynamicPacks:
-    # Europa-Start
-    - BodyBagsDynamic
-    # Europa-End
     - AdvancedTools
     #- ScienceEquipment - Goobstation - Moved to Scifab
     #- ScienceExplosives - Goobstation - Moved to Scifab
@@ -528,13 +525,10 @@
     - MedicalMisc
     - MedicalVehiclesAdvanced
     - UpgradeKits
+    - ConstructionBagOfHolding
     # Einstein Engines Packs
     - Translators
   - type: EmagLatheRecipes
-    # Europa-Start
-    emagStaticPacks:
-    - BodyBagsSyndicateStatic
-    # Europa-End
     emagDynamicPacks:
     - SecurityAmmo
     - SecurityExplosives
@@ -602,6 +596,7 @@
     - ShuttleBoards
     # Goobstation Packs
     - SharedBoards
+    - ShuttleBoardsGoob
   - type: MaterialStorage
     whitelist:
       tags:
@@ -881,6 +876,9 @@
     # Einstein Engines Packs
     - SyringeCase
     dynamicPacks:
+    # Europa-Start
+    - BodyBagsDynamic
+    # Europa-End
     - Chemistry
     # Goobstation Packs
     - Surgery
@@ -891,6 +889,7 @@
     - MedicalVehiclesAdvanced
     - MedicalBoards
     - Janitor
+    - Genetics
     # Einstein Engines Packs
     - Translators # Language
     - TranslatorImplanters # Language
@@ -898,6 +897,7 @@
     board: MedicalTechFabCircuitboard
   - type: EmagLatheRecipes # Goobstation Packs
     emagStaticPacks:
+    - BodyBagsSyndicateStatic # Europa
     - SyndicateCatridgesStatic
   - type: StealTarget
     stealGroup: MedicalTechFabCircuitboard
@@ -938,6 +938,7 @@
     - Bedsheets
     # Goobstation Packs
     - ClothingCasualJumpsuits
+    - ClothingCommandSummer
   - type: EmagLatheRecipes
     emagStaticPacks:
     - ClothingCentComm

@@ -1714,7 +1714,6 @@
         enum.ToggleableVisuals.Layer:
           True: { visible: true }
           False: { visible: false }
-
   - type: Body # Shitmed Change
     bodyType: Complex
     prototype: Monkey
@@ -1827,6 +1826,9 @@
         Piercing: 4
       groups:
         Burn: 3
+    catchingFailDamage:
+      types:
+        Blunt: 1
     clumsySound:
       path: /Audio/Animals/monkey_scream.ogg
 
@@ -1983,6 +1985,9 @@
         Piercing: 7
       groups:
         Burn: 3
+    catchingFailDamage:
+      types:
+        Blunt: 1
     clumsySound:
       path: /Audio/Voice/Reptilian/reptilian_scream.ogg
 
@@ -2402,6 +2407,8 @@
   - type: Damageable
     damageContainer: Biological
     damageModifierSet: Zombie
+  - type: GlobalAntagonist # Europa
+    antagonistPrototype: globalAntagonistBlob
 
 - type: entity
   name: lizard #Weh
@@ -2578,9 +2585,9 @@
 
 # Would be cool to have some functionality for the parrot to be able to sit on stuff
 - type: entity
-  name: parrot
   parent: [ SimpleMobBase, FlyingMobBase ]
-  id: MobParrot
+  id: MobParrotBase
+  abstract: true
   description: Infiltrates your domain, spies on you, and somehow still a cool pet.
   components:
   - type: MovementSpeedModifier
@@ -2591,7 +2598,7 @@
     layers:
     - map: ["enum.DamageStateVisualLayers.Base"]
       state: parrot
-      sprite: Mobs/Animals/parrot.rsi
+      sprite: Mobs/Animals/parrot/parrot.rsi
   - type: Fixtures
     fixtures:
       fix1:
@@ -2627,6 +2634,29 @@
     - TauCetiBasic
     understands:
     - TauCetiBasic
+  - type: ActiveListener
+  - type: Vocalizer
+  - type: RadioVocalizer
+  - type: ParrotListener
+  - type: ParrotMemory
+  - type: Inventory
+    templateId: parrot
+    speciesId: parrot
+    # transparent displacement map to hide the headset. this should be an animated displacement map to follow the parrot
+    # as it bobs up and down, but this in turn needs some way to change the displacement map on inventory entities when
+    # the parrot dies, otherwise the visuals will be broken
+    displacements:
+      ears:
+        sizeMaps:
+          32:
+            sprite: Mobs/Animals/parrot/displacement.rsi
+            state: ears
+  - type: InventorySlots
+  - type: Strippable
+  - type: UserInterface
+    interfaces:
+      enum.StrippingUiKey.Key:
+        type: StrippableBoundUserInterface
   - type: InteractionPopup
     successChance: 0.6
     interactSuccessString: petting-success-bird
@@ -2636,6 +2666,13 @@
       path: /Audio/Animals/parrot_raught.ogg
   - type: Bloodstream
     bloodMaxVolume: 50
+
+- type: entity
+  name: parrot
+  parent: MobParrotBase
+  id: MobParrot
+  components:
+  - type: ParrotAccent # regular parrots have a parrotaccent. Polly is special and does not
 
 - type: entity
   name: penguin
@@ -2948,6 +2985,8 @@
     raffle:
       settings: short
   - type: GhostTakeoverAvailable
+  - type: GlobalAntagonist # Europa
+    antagonistPrototype: globalAntagonistSpider
 
 - type: entity
   name: tarantula
@@ -2991,6 +3030,9 @@
   - MobSpiderAngryBase
   - MobGiantSpider
   id: MobGiantSpiderAngry
+  components: # Europa
+  - type: GlobalAntagonist
+    antagonistPrototype: globalAntagonistSpider
 
 - type: entity
   name: clown spider
@@ -3039,6 +3081,8 @@
     - type: Bloodstream
       bloodMaxVolume: 150
       bloodReagent: Laughter
+    - type: GlobalAntagonist # Europa
+      antagonistPrototype: globalAntagonistSpiderClown
 
 - type: entity
   name: wizard spider
@@ -3052,6 +3096,8 @@
     - Universal # Should allow them to understand everything and speak it too. Might need to change this.
     understands:
     - Universal
+  - type: GlobalAntagonist # Europa
+    antagonistPrototype: globalAntagonistSpider
 
 - type: entity
   name: possum
@@ -4272,13 +4318,18 @@
       belt:
         sizeMaps:
           32:
-            sprite: Mobs/Pets/corgi.rsi
-            state: belt_displacement
+            sprite: Mobs/Pets/displacements.rsi
+            state: corgi_belt_displacement
       ears:
         sizeMaps:
           32:
-            sprite: Mobs/Pets/corgi.rsi
-            state: belt_displacement
+            sprite: Mobs/Pets/displacements.rsi
+            state: corgi_belt_displacement
+      head:
+        sizeMaps:
+          32:
+            sprite: Mobs/Pets/displacements.rsi
+            state: corgi_head_displacement
   - type: Hands # HANDS!
   - type: Puller
   - type: Cuffable # bad dog!

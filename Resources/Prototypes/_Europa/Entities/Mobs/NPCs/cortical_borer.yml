@@ -67,11 +67,11 @@
     bleedReductionAmount: 2 # bleeding stops faster
   - type: MovementSpeedModifier
     baseWalkSpeed : 1.9
-    baseSprintSpeed : 5
+    baseSprintSpeed : 4.2
   - type: Tag
     tags:
     - Meat
-  - type: ThermalVision
+  - type: ThermalVision # Maybe remove
     color: "#ae65bf"
     lightRadius: 15
     activateSound: null
@@ -95,7 +95,8 @@
   - type: Speech
     enabled: false
   - type: HealthAnalyzer
-    silent: true
+    scanningEndSound:
+      path: "/Audio/Voice/Slime/slime_squish.ogg"
     maxScanRange: .5
   - type: CanEscapeInventory
   - type: GuideHelp
@@ -104,6 +105,8 @@
   - type: Body
     thermalVisibility: false
   - type: UniversalLanguageSpeaker
+  - type: GlobalAntagonist
+    antagonistPrototype: globalAntagonistCorticalBorer
 
 - type: entity
   parent: BaseItem

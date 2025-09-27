@@ -179,10 +179,7 @@
     - id: TidemindDevelop # Goobstation - Tidemind
     - id: MothroachSpawn # DeltaV
     - id: DerelictCyborgSyndicateSpawn # Goobstation - usually calm
-#    - id: AncientXenoVentsEasy # Goobstation | Europa-Remove
-#    - id: AncientXenoVentsMedium # Goobstation | Europa-Remove
-#    - id: AncientXenoVentsHard # Goobstation | Europa-Remove
-    - id: MalignRiftSpawn # DeltaV
+#    - id: MalignRiftSpawn # DeltaV | Europa-Remove
     - id: FloorGoblinSpawn # Goobstation
 
 - type: entityTable
@@ -209,7 +206,7 @@
     - id: BingleSpawn #Goobstation - Bingle
     - id: SlaughterDemonMidround # Goobstation - Slaughter Demon
     - id: XenomorphsInfestation # WD EDIT
-#    - id: AncientXenoVentsRogue # Goobstation | Europa-Remove
+
 
 - type: entity
   id: BaseStationEvent
@@ -246,6 +243,8 @@
   parent: BaseStationEventShortDelay
   components:
   - type: StationEvent
+    minimumPlayers: 10 # Europa
+    reoccurrenceDelay: 15 # Europa
     startAnnouncementColor: "#18abf5"
     startAudio:
       path: /Audio/_Europa/Announcements/flux.ogg # Europa-Edit
@@ -269,6 +268,7 @@
       max:  30
     chaosScore: 40 # Goobstation
   - type: StationEvent
+    reoccurrenceDelay: 10 # Europa
     startAnnouncementColor: "#18abf5"
     startAudio:
       path: /Audio/_Europa/Announcements/blusp_anomalies.ogg # Europa-Edit
@@ -285,7 +285,7 @@
   components:
   - type: StationEvent
     weight: 2
-    reoccurrenceDelay: 5
+    reoccurrenceDelay: 15 # Europa-Edit | 5 > 15
     earliestStart: 1
     duration: 1
     chaos: # Goobstation
@@ -351,7 +351,7 @@
   - type: StationEvent
     weight: 5
     duration: 1
-    minimumPlayers: 10
+    minimumPlayers: 15 # Europa-Edit | 10 > 15
     eventType: Chaotic # Goobstation
   # Goobstation
   - type: GameRule
@@ -364,10 +364,10 @@
   id: DragonSpawn
   components:
   - type: StationEvent
-    weight: 3
+    weight: 2
     earliestStart: 45
-    reoccurrenceDelay: 20
-    minimumPlayers: 60
+    maxOccurrences: 1
+    minimumPlayers: 50
     duration: null
     chaos: # Goobstation
       Hostile: 20
@@ -403,10 +403,10 @@
   id: NinjaSpawn
   components:
   - type: StationEvent
-    weight: 6
+    weight: 3
     duration: null
-    earliestStart: 45
-    reoccurrenceDelay: 20
+    earliestStart: 30
+    maxOccurrences: 1
     minimumPlayers: 30
     chaos: # Goobstation
       Hostile: 20
@@ -464,6 +464,8 @@
         - NamesNinjaTitle
         - NamesNinja
         nameFormat: name-format-ninja
+      - type: GlobalAntagonist # Europa
+        antagonistPrototype: globalAntagonistNinja
       mindRoles:
       - MindRoleNinja
 
@@ -589,6 +591,7 @@
   parent: BaseStationEventShortDelay
   components:
   - type: StationEvent
+    minimumPlayers: 8 # Europa
     startAnnouncement: station-event-gas-leak-start-announcement
     startAudio:
       path: /Audio/Announcements/gasleak_start.ogg # Europa-Edit
@@ -710,7 +713,7 @@
       path: /Audio/Announcements/attention.ogg # Europa-Edit
     earliestStart: 20
     minimumPlayers: 15
-    weight: 5
+    weight: 7
     duration: 30 # DeltaV: was 60, used as a delay now
     chaos: # Goobstation
       Hostile: 20
@@ -736,7 +739,7 @@
       path: /Audio/Announcements/attention.ogg
     earliestStart: 20
     minimumPlayers: 15
-    weight: 5
+    weight: 7
     duration: 30 # DeltaV: was 60, used as a delay now
     chaos: # Goobstation
       Hostile: 20
@@ -762,7 +765,7 @@
       path: /Audio/Announcements/aliens.ogg
     earliestStart: 20
     minimumPlayers: 15
-    weight: 5
+    weight: 7
     duration: 30 # DeltaV: was 60, used as a delay now
     chaos: # Goobstation
       Hostile: 20
@@ -785,7 +788,7 @@
       path: /Audio/Announcements/attention.ogg
     earliestStart: 45 # DeltaV - was 20
     minimumPlayers: 30 # DeltaV - was 20
-    weight: 1 # DeltaV - was 1.5
+    weight: 3 # DeltaV - was 1.5
     duration: 30 # DeltaV: was 60, used as a delay now
     chaos: # Goobstation
       Hostile: 20
@@ -804,7 +807,7 @@
   parent: BaseGameRule
   components:
   - type: StationEvent
-    earliestStart: 90
+    earliestStart: 60
     minimumPlayers: 40
     weight: 1 # Zombies was happening basically every single survival round, so now it's super rare
     duration: 1
@@ -838,6 +841,8 @@
       - type: ZombifyOnDeath
       - type: IncurableZombie
       - type: InitialInfected
+      - type: GlobalAntagonist # Europa
+        antagonistPrototype: globalAntagonistZombie
       mindRoles:
       - MindRoleInitialInfected
 
@@ -847,13 +852,13 @@
   components:
   - type: StationEvent
     earliestStart: 35
-    weight: 5.5
-    minimumPlayers: 20
+    weight: 2.5
+    minimumPlayers: 50
     duration: 1
     chaos: # Goobstation
-      Hostile: 60
-      Medical: 75
-      Death: 100
+      Hostile: 200
+      Medical: 200
+      Death: 200
     eventType: HostilesSpawn # Goobstation
   # Goobstation
   - type: GameRule
@@ -974,24 +979,24 @@
     chaosScore: 150
   - type: IonStormRule
 
-- type: entity
-  id: MimicVendorRule
-  parent: BaseGameRule
-  components:
-  - type: StationEvent
-    earliestStart: 0
-    minimumPlayers: 20
-    maxOccurrences: 1 # this event has diminishing returns on interesting-ness, so we cap it
-    weight: 5
-    chaos: # Goobstation
-      Hostile: 20 # for when they're actually properly hostile
-      Hunger: 10
-      Thirst: 10
-    eventType: Neutral # Goobstation
-  # Goobstation
-  - type: GameRule
-    chaosScore: 20
-  - type: MobReplacementRule
+#- type: entity # Europa-Remove
+#  id: MimicVendorRule
+#  parent: BaseGameRule
+#  components:
+#  - type: StationEvent
+#    earliestStart: 0
+#    minimumPlayers: 20
+#    maxOccurrences: 1 # this event has diminishing returns on interesting-ness, so we cap it
+#    weight: 5
+#    chaos: # Goobstation
+#      Hostile: 20 # for when they're actually properly hostile
+#      Hunger: 10
+#      Thirst: 10
+#    eventType: Neutral # Goobstation
+#  # Goobstation
+#  - type: GameRule
+#    chaosScore: 20
+#  - type: MobReplacementRule
 
 - type: entity
   id: GreytideVirus

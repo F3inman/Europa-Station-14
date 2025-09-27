@@ -47,7 +47,7 @@ public sealed partial class MorphComponent : Component
     public int EatWeaponHungerReq = 5;
 
     [DataField]
-    public int DetectableCount = 6;
+    public int DetectableCount = 3;
 
     [DataField]
     public int OpenVentFoodReq = 5;
@@ -77,6 +77,9 @@ public sealed partial class MorphComponent : Component
 
     [DataField]
     public EntityWhitelist? DevourWhitelist = new();
+
+    [DataField]
+    public EntityWhitelist? DevourBlacklist = new();
 
     [DataField(customTypeSerializer: typeof(PrototypeIdSerializer<EntityPrototype>))]
     public string? DevourAction = "ActionMorphDevour";
